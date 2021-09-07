@@ -1,14 +1,14 @@
 import { useState } from "react";
 import "./VideoCard.css";
 
-let VideoCard =()=>
+let VideoCard =(props)=>
 {
     let [playing , setPlaying]= useState(false);
     let [commentBoxOpen , setCommentBoxOpen] = useState()
 
     return(
         <div className="video-card">
-        <p className="video-card-username">New User</p>
+        <p className="video-card-username">{props.data.name}</p>
         <span className="video-card-music">
             <span class="fas fa-music " ></span> 
             <marquee>some song</marquee>
@@ -70,7 +70,7 @@ let VideoCard =()=>
 
             }
             loop
-            src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+            src={props.data.url}
             className="video-card-video"
         ></video>
         </div>
