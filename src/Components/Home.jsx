@@ -10,27 +10,28 @@ import "./Home.css"
 let Home = () => {
   
   let user = useContext(authContext);
-  let [posts , setPosts] = useState([]);
+  let [posts, setPosts] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
+    let unsub=firestore.collection("posts").onSnapshot((querySnapshot) => {
+      let docArr = querySnapshot.docs;
 
-      firestore.collection("posts").onSnapshot((querySnapshot)=>{
+      let arr = [];
 
-        let docArr = querySnapshot.docs;
+      for (let i = 0; i < docArr.length; i++) {
+        arr.push({
+          id: docArr[i].id,
+          ...docArr[i].data(),
+        });
+      }
 
-        let arr=[];
+      setPosts(arr);
+    });
 
-        for(let i=0 ; i<docArr.length ;i++)
-        {
-          arr.push({
-            id:  docArr[i].id,
-            ...docArr[i].data(),
-
-          })
-        }
-          setPosts(arr);
-      })
-  }, [])
+    return ()=>{
+      unsub();
+    }
+  }, []);
   return (
     <>
       {user ? "" : <Redirect to="/Login" />}
@@ -87,7 +88,7 @@ let Home = () => {
 
               firestore
               .collection("posts")
-              .add({ name: user.displayName , url, likes:[] , comments:[]})
+              .add({ name: user.displayName , url, likes:[] , comments:[] })
 
             });
           });
